@@ -1,0 +1,126 @@
+export type Alerts =  {
+    title: string,
+    regions: string[],
+    severity: string,
+    time: number,
+    expires: number,
+    description: string,
+    uri: string,
+  };
+  
+  export type Currently =  {
+    time: number,
+    summary: string,
+    icon: string,
+    nearestStormDistance: number,
+    nearestStormBearing: number,
+    precipIntensity: number,
+    precipProbability: number,
+    temperature: number,
+    apparentTemperature: number,
+    dewPoint: number,
+    humidity: number,
+    pressure: number,
+    windSpeed: number,
+    windGust: number,
+    windBearing: number,
+    cloudCover: number,
+    uvIndex: number,
+    visibility: number,
+    ozone: number,
+  };
+  
+  export type Data =  {
+    time: number,
+    precipIntensity: number,
+    precipProbability: number,
+  };
+  
+  export type Data1 =  {
+    time: number,
+    summary: string,
+    icon: string,
+    precipIntensity: number,
+    precipProbability: number,
+    temperature: number,
+    apparentTemperature: number,
+    dewPoint: number,
+    humidity: number,
+    pressure: number,
+    windSpeed: number,
+    windGust: number,
+    windBearing: number,
+    cloudCover: number,
+    uvIndex: number,
+    visibility: number,
+    ozone: number,
+    precipType?: string,
+  };
+  
+  export type Data2 =  {
+    time: number,
+    summary: string,
+    icon: string,
+    sunriseTime: number,
+    sunsetTime: number,
+    moonPhase: number,
+    precipIntensity: number,
+    precipIntensityMax: number,
+    precipIntensityMaxTime: number,
+    precipProbability: number,
+    temperatureHigh: number,
+    temperatureHighTime: number,
+    temperatureLow: number,
+    temperatureLowTime: number,
+    apparentTemperatureHigh: number,
+    apparentTemperatureHighTime: number,
+    apparentTemperatureLow: number,
+    apparentTemperatureLowTime: number,
+    dewPoint: number,
+    humidity: number,
+    pressure: number,
+    windSpeed: number,
+    windGust: number,
+    windGustTime: number,
+    windBearing: number,
+    cloudCover: number,
+    uvIndex: number,
+    uvIndexTime: number,
+    visibility: number,
+    ozone: number,
+    temperatureMin: number,
+    temperatureMinTime: number,
+    temperatureMax: number,
+    temperatureMaxTime: number,
+    apparentTemperatureMin: number,
+    apparentTemperatureMinTime: number,
+    apparentTemperatureMax: number,
+    apparentTemperatureMaxTime: number,
+    precipType?: string,
+  };
+  
+  export type Flags =  {
+    sources: string[],
+    "nearest-station": number,
+    units: string,
+  };
+  
+  export type Minutely =  {
+    summary: string,
+    icon: string,
+    data: Data2[],
+  };
+  
+  export type DarkSkyForcast =  {
+    latitude: number,
+    longitude: number,
+    timezone: string,
+    currently: Currently,
+    minutely: Minutely,
+    hourly: Minutely,
+    daily: Minutely,
+    alerts: Alerts[],
+    flags: Flags,
+    offset: number,
+  };  
+  

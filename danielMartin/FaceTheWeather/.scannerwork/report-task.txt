@@ -1,0 +1,7 @@
+organization=danieldevelops-github
+projectKey=danielDevelops_faceTheWeather
+serverUrl=https://sonarcloud.io
+serverVersion=7.7.0.23020
+dashboardUrl=https://sonarcloud.io/dashboard?id=danielDevelops_faceTheWeather
+ceTaskId=AWnKi_MpnZhjUG4Scsoj
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWnKi_MpnZhjUG4Scsoj

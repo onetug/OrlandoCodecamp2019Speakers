@@ -1,0 +1,5 @@
+{
+    "editor.detectIndentation": false,
+        "javascript.validate.enable": false,
+        "typescript.tsc.autoDetect": "off"
+}
