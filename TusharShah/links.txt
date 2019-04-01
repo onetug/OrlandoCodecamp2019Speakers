@@ -1,0 +1,23 @@
+Azure AD
+	Azure AD edistions: https://azure.microsoft.com/en-us/pricing/details/active-directory/ 
+	Azure Active Directory for developers: https://docs.microsoft.com/en-us/azure/active-directory/develop/
+	Authentication Scenario: https://docs.microsoft.com/en-us/azure/active-directory/develop/authentication-scenarios 
+	B2B vs B2C: https://docs.microsoft.com/en-us/azure/active-directory/b2b/compare-with-b2c 
+  
+ADAL vs MSAL
+	https://docs.microsoft.com/en-us/azure/active-directory/develop/azure-ad-endpoint-comparison 
+	https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Adal-to-Msal 
+	https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-limitations 
+  
+Samples
+	https://github.com/Azure-Samples/
+	https://github.com/Azure-Samples/active-directory-angularjs-singlepageapp
+	https://github.com/ShahTushar/    
+  
+Azure AD PowerShell
+	https://github.com/AzureAD/azure-activedirectory-powershell
+	https://docs.microsoft.com/en-us/powershell/module/azuread/?view=azureadps-2.0 
+  
+Other resources
+	A Guide To OAuth 2.0 Grants: https://alexbilbie.com/guide-to-oauth-2-grants/ 
+	Blog: http://community.campusmgmt.com/?s=Tushar  
