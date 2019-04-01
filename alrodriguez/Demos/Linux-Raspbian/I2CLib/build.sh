@@ -1,0 +1,1 @@
+gcc -shared -o i2cNativeLib.o i2cNativeLib.c -lwiringPi -I/home/pi/Desktop/WiringPi/wiringPi/
