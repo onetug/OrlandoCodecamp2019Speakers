@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build main",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/frontend/frontend.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build cqrs",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/frontend.demo2-cqrs/frontend.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build es",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/frontend.demo3-es/frontend.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
