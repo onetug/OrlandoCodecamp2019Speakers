@@ -32,3 +32,12 @@ This example project is used to demonstrate some of the basic concepts of:
   
 ## Domain Driven Design Aggregates
   - https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/net-core-microservice-domain-model
+
+# Scripts and commands
+This project uses MS SQL 2017 for linux running in Docker.  You can use an version of sql server that you like by changing the configuration in appsettings.json
+
+## Startup
+  - start-sql.sh will start a fresh new instance of sql server if one isn't already
+  - reset-sql.sh will try to kill and remove an existing running instance and then respawn a fresh container
+  - migrate-only.sh will create the clean database migration for running the project
+  - dotnet run after that
