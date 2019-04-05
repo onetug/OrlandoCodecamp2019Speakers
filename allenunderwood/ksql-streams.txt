@@ -1,0 +1,73 @@
+docker-compose exec ksql-cli ksql http://ksql-server:8088
+
+SET 'auto.offset.reset' = 'earliest';
+
+# SINGLE QUOTES ARE IMPERATIVE
+# Run first....pause...
+CREATE TABLE USER_REWARDS 
+(userid string, pointbalance bigint, pointsredeemed bigint ) 
+WITH(KAFKA_TOPIC='source_jdbc_user_rewards', KEY='userid', VALUE_FORMAT='AVRO');
+
+# Run second...first must complete before starting this one
+CREATE STREAM USER_REWARDS_TRANSACTIONS 
+(userrewardtransactionid bigint, userid string, points bigint, description string, postediso8601 string) 
+WITH(KAFKA_TOPIC='source_jdbc_user_rewards_transactions', VALUE_FORMAT='AVRO', KEY='userid');
+
+# Run third
+CREATE TABLE USER_REWARDS_RT_BALANCE WITH(VALUE_FORMAT='AVRO') AS 
+SELECT 
+    urt.ROWKEY AS UserID,
+    MAX(ur.PointBalance) + SUM(urt.Points) AS PointBalance
+FROM  USER_REWARDS_TRANSACTIONS urt
+    JOIN USER_REWARDS ur ON urt.ROWKEY = ur.ROWKEY
+GROUP BY urt.ROWKEY;
+
+# Now let's see what's in that new TABLE
+SELECT * FROM USER_REWARDS_RT_BALANCE;
+
+# Now let's target a specific user so we can compare from the console to the SQL Queries
+
+#  Now, open another tab in commander, to show what NOT setting the auto offset reset does...
+SELECT * FROM USER_REWARDS_RT_BALANCE;
+
+# Now set the offset
+SET 'auto.offset.reset' = 'earliest';
+
+# Now rerun the query and there'll be quite a bit of records stream through - try and find User_8 and switch tabs to show that they're in sync
+SELECT * FROM USER_REWARDS_RT_BALANCE;
+
+# Now let's try to update the redeemed points separately
+CREATE TABLE USER_REWARDS_RT_REDEEMED WITH(VALUE_FORMAT='AVRO') AS
+SELECT 
+    ur.ROWKEY AS UserID,
+    MAX(ur.PointsRedeemed) + SUM(urt.Points*-1) AS PointsRedeemed
+FROM  USER_REWARDS_TRANSACTIONS urt
+    JOIN USER_REWARDS ur ON urt.ROWKEY = ur.ROWKEY
+WHERE
+    urt.Points < 0
+GROUP BY ur.ROWKEY;
+
+
+# Let's take a peek at that thing...
+SELECT * FROM USER_REWARDS_RT_REDEEMED WHERE UserID = 'User_8';
+
+
+# Now let's create an updated output with both the pointbalance and points redeemed
+CREATE TABLE FINAL_USER_REWARDS WITH(VALUE_FORMAT='AVRO') AS
+SELECT 
+    urb.ROWKEY AS UserID,
+    SUM(urb.PointBalance) AS PointBalance,
+    SUM(urr.PointsRedeemed) AS PointsRedeemed
+FROM  
+    USER_REWARDS_RT_BALANCE urb
+    JOIN USER_REWARDS_RT_REDEEMED urr 
+        ON urr.ROWKEY = urb.ROWKEY
+GROUP BY urb.ROWKEY;
+
+
+
+
+
+
+CREATE STREAM ORDERS_RAW (itemid string, orderunits double, address struct<city string, state string, zipcode int>, ordertime string) WITH (kafka_topic='orders_sample_json', value_format='JSON');
+CREATE TABLE USERS_ORIGINAL (registertime bigint, gender string, regionid string, userid string) WITH (kafka_topic='users_sample_json', value_format='JSON', key='userid');
