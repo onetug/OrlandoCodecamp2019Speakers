@@ -1,0 +1,17 @@
+.conferenceList {
+  margin-top: 60px;
+}
+
+.conference {
+  height: 120px;
+  border: 0px;
+}
+
+.conference h4 {
+  margin-bottom: 0px;
+  font-size: 1.2em;
+}
+
+.right {
+  float: right;
+}

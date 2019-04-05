@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "4995dbb8-b476-4710-8966-33142936e010",
+		"name": "OrlandoCC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sources",
+			"item": [
+				{
+					"name": "User Rewards",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"source_jdbc_user_rewards\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n        \"connection.url\": \"jdbc:sqlserver://sql-server;portNumber=1433;databaseName=StreamingDB;selectMethod=cursor;\",\r\n        \"connection.user\": \"sa\",\r\n        \"connection.password\": \"c0dingbl0cks!\",\r\n        \"tasks.max\": 5,\r\n        \"mode\": \"incrementing\",\r\n        \"incrementing.column.name\": \"rowverbigint\",\r\n        \"topic.prefix\": \"source_jdbc_user_rewards\",\r\n        \"poll.interval.ms\": 86400000,\r\n        \"query\": \"SELECT userid, pointbalance, pointsredeemed, rowver, rowverbigint FROM dbo.UserRewards\",\r\n        \"transforms\": \"setSchema,createKey,extractKey\",\r\n        \"transforms.setSchema.type\": \"org.apache.kafka.connect.transforms.SetSchemaMetadata$Value\",\r\n        \"transforms.setSchema.schema.name\": \"com.codingblocks.orlandocc.avro.UserReward\",\r\n        \"transforms.setSchema.schema.version\": \"1\",\r\n        \"transforms.createKey.type\": \"org.apache.kafka.connect.transforms.ValueToKey\",\r\n        \"transforms.createKey.fields\": \"userid\",\r\n        \"transforms.extractKey.type\": \"org.apache.kafka.connect.transforms.ExtractField$Key\",\r\n        \"transforms.extractKey.field\": \"userid\",\r\n        \"batch.max.rows\": 100,\r\n        \"key.converter.schema.registry.url\": \"http://localhost:8081\",\r\n        \"value.converter.schema.registry.url\": \"http://localhost:8081\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Rewards Transactions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"source_jdbc_user_rewards_transactions\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n        \"connection.url\": \"jdbc:sqlserver://sql-server;portNumber=1433;databaseName=StreamingDB;selectMethod=cursor;\",\r\n        \"connection.user\": \"sa\",\r\n        \"connection.password\": \"c0dingbl0cks!\",\r\n        \"tasks.max\": 5,\r\n        \"mode\": \"incrementing\",\r\n        \"incrementing.column.name\": \"userrewardtransactionid\",\r\n        \"timestamp.column.name\": \"posted\",\r\n        \"topic.prefix\": \"source_jdbc_user_rewards_transactions\",\r\n        \"poll.interval.ms\": 1000,\r\n        \"query\": \"SELECT userrewardtransactionid, userid, points, description, posted, postediso8601=CONVERT(varchar, posted, 126) FROM dbo.UserRewardsTransactions\",\r\n        \"transforms\": \"setSchema,createKey,extractKey\",\r\n        \"transforms.setSchema.type\": \"org.apache.kafka.connect.transforms.SetSchemaMetadata$Value\",\r\n        \"transforms.setSchema.schema.name\": \"com.codingblocks.orlandocc.avro.UserRewardTransaction\",\r\n        \"transforms.setSchema.schema.version\": \"1\",\r\n        \"transforms.createKey.type\": \"org.apache.kafka.connect.transforms.ValueToKey\",\r\n        \"transforms.createKey.fields\": \"userid\",\r\n        \"transforms.extractKey.type\": \"org.apache.kafka.connect.transforms.ExtractField$Key\",\r\n        \"transforms.extractKey.field\": \"userid\",\r\n        \"batch.max.rows\": 1000,\r\n        \"key.converter.schema.registry.url\": \"http://localhost:8081\",\r\n        \"value.converter.schema.registry.url\": \"http://localhost:8081\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sinks",
+			"item": [
+				{
+					"name": "User Rewards Real Time DB",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"sink_jdbc_user_rewards_realtime\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.confluent.connect.jdbc.JdbcSinkConnector\",\r\n        \"connection.url\": \"jdbc:sqlserver://sql-server;portNumber=1433;databaseName=StreamingDB;selectMethod=cursor;\",\r\n        \"connection.user\": \"sa\",\r\n        \"connection.password\": \"c0dingbl0cks!\",\r\n        \"tasks.max\": 5,\r\n        \"topics\": \"FINAL_USER_REWARDS\",\r\n        \"auto.create\": false,\r\n        \"insert.mode\": \"upsert\",\r\n        \"auto.evolve\": false,\r\n        \"batch.size\": 100,\r\n        \"table.name.format\": \"UserRewards_RealTime\",\r\n        \"pk.mode\": \"record_key\",\r\n        \"pk.fields\": \"USERID\",\r\n        \"fields.whitelist\": \"\",\r\n        \"key.converter.schema.registry.url\": \"http://localhost:8081\",\r\n        \"value.converter.schema.registry.url\": \"http://localhost:8081\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Rewards Real Time Elastic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"sink_elastic_user_rewards_transactions\",\n    \"config\": {\n        \"connector.class\": \"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector\",\n        \"tasks.max\": \"1\",\n        \"topics\": \"source_jdbc_user_rewards_transactions\",\n        \"key.ignore\": \"true\",\n        \"connection.url\": \"http://elasticsearch:9200\",\n        \"type.name\": \"kafka-connect\",\n        \"name\": \"sink_elastic_user_rewards_transactions\",\n\t        \n\t    \"_comment\": \"Use SMT to cast op_ts and current_ts to timestamp datatype (TimestampConverter is Kafka >=0.11 / Confluent Platform >=3.3). Format from https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html\",\n\t    \"transforms\": \"convert_posted\",\n\t    \"transforms.convert_posted.type\": \"org.apache.kafka.connect.transforms.TimestampConverter$Value\",\n\t    \"transforms.convert_posted.target.type\": \"Timestamp\",\n\t    \"transforms.convert_posted.field\": \"postediso8601\",\n\t    \"transforms.convert_posted.format\": \"yyyy-MM-dd'T'HH:mm:ss.SSSSSSSX\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
